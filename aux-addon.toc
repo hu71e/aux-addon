@@ -1,5 +1,5 @@
 ## Interface: 11303
-## Author: shirsig, hu71e
+## Author: shirsig
 ## Title: aux
 ## Version: 1.0.0_hu_0.0.1
 ## Notes: [HU71E汉化修改版] Auction House replacement
