@@ -75,11 +75,12 @@ do
 end
 
 bid_listing = listing.new(frame.bid_listing)
-bid_listing:SetColInfo{
+bid_listing:SetColInfo{ --hu71e: display unit price instead of stack price in post frame.
     {name=L['Auctions'], width=.17, align='CENTER'},
     {name=L['Time\nLeft'], width=.11, align='CENTER'},
     {name=L['Stack\nSize'], width=.11, align='CENTER'},
-    {name=L['Auction Bid\n(per stack)'], width=.4, align='RIGHT'},
+    --remove: {name=L['Auction Bid\n(per stack)'], width=.4, align='RIGHT'},
+    {name=L['Auction Bid\n(per item)'], width=.4, align='RIGHT'},
     {name=L['% Hist.\nValue'], width=.21, align='CENTER'},
 }
 bid_listing:SetSelection(function(data)

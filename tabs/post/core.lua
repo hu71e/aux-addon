@@ -140,7 +140,8 @@ function update_auction_listing(listing, records, reference)
 		local stack_size = stack_size_slider:GetValue()
 		for _, record in pairs(records[selected_item.key] or empty) do
 			local price_color = undercut(record, stack_size_slider:GetValue(), listing == 'bid') < reference and aux.color.red
-			local price = record.unit_price * (listing == 'bid' and record.stack_size or 1)
+            --hu71e@191230: the bid items in the post frame using the unit_price
+			local price = record.unit_price --remove: * (listing == 'bid' and record.stack_size or 1)
 			tinsert(rows, {
 				cols = {
                 { value = record.own and aux.color.green(record.count) or record.count },
@@ -158,7 +159,9 @@ function update_auction_listing(listing, records, reference)
 				{ value = '---' },
 				{ value = '---' },
 				{ value = '---' },
-				{ value = money.to_string(historical_value * (listing == 'bid' and stack_size_slider:GetValue() or 1), true, nil, aux.color.green) },
+                --hu71e@191230: the bid items in the post frame using the historical unit_price
+                --remove: { value = money.to_string(historical_value * (listing == 'bid' and stack_size_slider:GetValue() or 1), true, nil, aux.color.green) },
+                { value = money.to_string(historical_value, true, nil, aux.color.green) },
 				{ value = historical_value and gui.percentage_historical(100) or '---' },
             },
 				record = { historical_value = true, stack_size = stack_size, unit_price = historical_value, own = true }
@@ -166,8 +169,9 @@ function update_auction_listing(listing, records, reference)
 		end
 		sort(rows, function(a, b)
 			return sort_util.multi_lt(
-				a.record.unit_price * (listing == 'bid' and a.record.stack_size or 1),
-				b.record.unit_price * (listing == 'bid' and b.record.stack_size or 1),
+                --hu71e@191230: always sort by unit_price
+				a.record.unit_price, --remove: * (listing == 'bid' and a.record.stack_size or 1),
+				b.record.unit_price, --remove: * (listing == 'bid' and b.record.stack_size or 1),
 
 				a.record.historical_value and 1 or 0,
 				b.record.historical_value and 1 or 0,
@@ -347,11 +351,13 @@ function update_item_configuration()
 end
 
 function undercut(record, stack_size, stack)
-    local price = ceil(record.unit_price * (stack and record.stack_size or stack_size))
+    --hu71e@191228: always return select.item.price='unit.price-1'
+    --remove: local price = ceil(record.unit_price * (stack and record.stack_size or stack_size))
+    local price = ceil(record.unit_price)
     if not record.own then
-	    price = price - 1
+        price = max(price-1, 1) --hu71e@191228: if price=0 then price=1
     end
-    return price / stack_size
+    return price --hu71e@191228: remove 'price / stack_size'
 end
 
 function quantity_update(maximize_count)
